@@ -1,0 +1,89 @@
+/* These styles are scoped to our extension elements by using unique IDs.
+   We avoid generic selectors like "div" or "p" so we don't break page styles. */
+
+#selectai-button {
+  position: absolute;
+  z-index: 2147483647; /* max z-index — stay above everything */
+  background: #1a1a2e;
+  color: #e0e0ff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: transform 0.1s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+#selectai-button:hover {
+  transform: translateY(-1px);
+  background: #2d2d5e;
+}
+
+#selectai-tooltip {
+  position: absolute;
+  z-index: 2147483646;
+  background: #1a1a2e;
+  color: #e0e0ff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 14px 16px;
+  border-radius: 12px;
+  max-width: 360px;
+  min-width: 200px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.selectai-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+.selectai-close:hover { color: #ccc; }
+
+.selectai-text {
+  margin-top: 4px;
+  padding-right: 16px; /* space for close button */
+}
+
+.selectai-error {
+  color: #ff8080;
+  font-size: 13px;
+}
+
+/* Loading dots animation */
+.selectai-loading {
+  display: flex;
+  gap: 5px;
+  padding: 4px 0;
+  align-items: center;
+}
+
+.selectai-loading span {
+  width: 7px;
+  height: 7px;
+  background: #7878dd;
+  border-radius: 50%;
+  animation: selectai-bounce 1s ease-in-out infinite;
+}
+
+.selectai-loading span:nth-child(2) { animation-delay: 0.15s; }
+.selectai-loading span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes selectai-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
