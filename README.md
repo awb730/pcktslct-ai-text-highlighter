@@ -92,4 +92,4 @@ select-ai/
 ## Author
 
 Allen Baez - Senior CS student at Montclair State University  
-[GitHub](https://github.com/awb730) · [LinkedIn](https://linkedin.com/in/albaez2005)
+[LinkedIn](https://linkedin.com/in/albaez2005)
