@@ -12,7 +12,7 @@
 
   "host_permissions": [
     "http://localhost:8000/*",
-    "https://*.onrender.com/*"
+    "https://ai-text-highlighter.onrender.com/*"
   ],
 
   "background": {
