@@ -2,7 +2,7 @@
 // separate from any webpage. It CAN make fetch requests to external servers.
 // It wakes up when the content script sends it a message.
 
-const BACKEND_URL = "https://ai-text-highlighter.onrender.com/ask"; // change to render
+const BACKEND_URL = "https://ai-text-highlighter.onrender.com/ask";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type !== "ASK_AI") return;
