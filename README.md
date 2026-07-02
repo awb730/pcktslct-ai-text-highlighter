@@ -81,9 +81,9 @@ select-ai/
 
 ## Potential Future Updates
 
-- [ ] Multiple modes: Summarize · Translate · Define · Simplify
+- [ ] Multiple modes: summarize, translate, define, simplify
 - [ ] Popup settings panel to configure the default mode
-- [ ] Response history stored in `chrome.storage.local`
+- [ ] Response history
 - [ ] Streaming responses token by token
 - [ ] Right-click context menu as an alternative trigger
 
