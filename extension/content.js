@@ -39,7 +39,7 @@ function showButton(rect) {
 
     button = document.createElement("div");
     button.id = "selectai-button";
-    button.textContent = "✦ Ask AI";
+    button.textContent = "✦ Ask Pocket";
 
     // Position: just above and to the right of the selection.
     // We use pageY (not clientY) so it stays correct when the page is scrolled.
@@ -54,25 +54,35 @@ function showButton(rect) {
 // --- Step 3: Handle the click ---
 function handleButtonClick() {
     removeTooltip();
-    showTooltip("loading"); // show a loading state immediately
+    showTooltip("loading");
 
+    // Guard against invalidated extension context (happens after reload/update)
     // Send a message to the background service worker.
     // chrome.runtime.sendMessage is how content scripts talk to background scripts.
     // The background script will make the actual fetch call and send back the response.
-    chrome.runtime.sendMessage(
-        { type: "ASK_AI", text: selectedText },
-        (response) => {
-            if (chrome.runtime.lastError) {
-                showTooltip("error", "Extension error. Try reloading the page.");
-                return;
+    if (!chrome.runtime?.id) {
+        showTooltip("error", "Extension was reloaded. Please refresh this page.");
+        return;
+    }
+
+    try {
+        chrome.runtime.sendMessage(
+            { type: "ASK_AI", text: selectedText },
+            (response) => {
+                if (chrome.runtime.lastError) {
+                    showTooltip("error", "Extension error. Try reloading the page.");
+                    return;
+                }
+                if (response.error) {
+                    showTooltip("error", response.error);
+                } else {
+                    showTooltip("result", response.result);
             }
-            if (response.error) {
-                showTooltip("error", response.error);
-            } else {
-                showTooltip("result", response.result);
             }
-        }
-    );
+        );
+    } catch (err) {
+        showTooltip("error", "Extension was reloaded. Please refresh this page.");
+    }
 }
 
 
