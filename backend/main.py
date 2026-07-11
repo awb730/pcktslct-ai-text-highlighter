@@ -28,6 +28,10 @@ class AskRequest(BaseModel):
     text: str          # the highlighted text
     mode: str = "explain"   # default mode; we'll add more later
 
+class AskImageRequest(BaseModel):
+    image_data: str
+    mode: str = "describe"
+
 # The system prompt changes based on what mode the user picked.
 # Right now we have one mode, but this pattern makes it easy to add
 # "summarize", "translate", "define" later.
@@ -61,6 +65,46 @@ async def ask(req: AskRequest):
             messages=[
                 {"role": "system", "content": build_system_prompt(req.mode)},
                 {"role": "user", "content": req.text}
+            ],
+            max_tokens=300,
+            temperature=0.4,
+        )
+        return {"response": response.choices[0].message.content}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/ask-image")
+async def ask_image(req: AskImageRequest):
+    if not req.image_data or not req.image_data.strip():
+        raise HTTPException(status_code=400, detail="No image data provided")
+
+    image_data = req.image_data.strip()
+    # Extension may send a full data URL; OpenAI expects raw base64 in the url field.
+    if image_data.startswith("data:"):
+        image_data = image_data.split(",", 1)[-1]
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a helpful assistant embedded in a browser extension. "
+                        "The user has selected a region of their screen or an image on a webpage. "
+                        "Describe what you see concisely and helpfully in 2-4 sentences."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": f"data:image/png;base64,{image_data}"},
+                        }
+                    ],
+                },
             ],
             max_tokens=300,
             temperature=0.4,
