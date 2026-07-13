@@ -30,7 +30,7 @@ class AskRequest(BaseModel):
 
 class AskImageRequest(BaseModel):
     image_data: str
-    mode: str = "describe"
+    mode: str = "explain"
 
 # The system prompt changes based on what mode the user picked.
 # Right now we have one mode, but this pattern makes it easy to add
@@ -43,7 +43,22 @@ def build_system_prompt(mode: str) -> str:
             "concise explanation of it. Be direct and informative. "
             "Keep your response to 2-4 sentences unless the topic requires more depth. "
             "Do not start with 'This text...' or repeat the highlighted text back."
-        )
+        ),
+        "summarize": (
+            "You are a helpful assistant embedded in a browser extension. "
+            "The user has selected content and wants a concise summary. "
+            "Summarize the key points in 3-5 bullet points. Be brief and direct."
+        ),
+        "translate": (
+            "You are a helpful assistant embedded in a browser extension. "
+            "The user has selected content and wants it translated to English. "
+            "Provide the translation only, without explanation or preamble."
+        ),
+        "simplify": (
+            "You are a helpful assistant embedded in a browser extension. "
+            "The user has selected content and wants it explained in simple terms. "
+            "Use plain language as if explaining to a curious 12-year-old. Avoid jargon."
+        ),
     }
     return prompts.get(mode, prompts["explain"])
 
@@ -88,14 +103,7 @@ async def ask_image(req: AskImageRequest):
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a helpful assistant embedded in a browser extension. "
-                        "The user has selected a region of their screen or an image on a webpage. "
-                        "Describe what you see concisely and helpfully in 2-4 sentences."
-                    ),
-                },
+                {"role": "system", "content": build_system_prompt(req.mode)},
                 {
                     "role": "user",
                     "content": [

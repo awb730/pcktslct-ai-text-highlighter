@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketSelectAI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 260px;
+      background: #1a1a2e;
+      color: #e0e0ff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 16px;
+    }
+
+    h1 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #a0a0cc;
+      margin-bottom: 6px;
+    }
+
+    select {
+      width: 100%;
+      background: #2d2d5e;
+      color: #e0e0ff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a0a0cc' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    select:hover {
+      border-color: rgba(120, 120, 221, 0.5);
+    }
+
+    select:focus {
+      border-color: #7878dd;
+    }
+
+    #status {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #6a6a8a;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #status.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>PocketSelectAI</h1>
+
+  <label for="mode-select">Response Mode</label>
+  <select id="mode-select">
+    <option value="explain">Explain</option>
+    <option value="summarize">Summarize</option>
+    <option value="translate">Translate to English</option>
+    <option value="simplify">Simplify</option>
+  </select>
+
+  <p id="status">Mode saved automatically</p>
+
+  <script src="popup.js"></script>
+</body>
+</html>
