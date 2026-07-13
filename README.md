@@ -1,6 +1,6 @@
 # PocketSelectAI
 
-A Chrome extension that lets you highlight any text on any webpage and instantly get an AI-powered explanation via a floating tooltip - no more copy-pasting and switching tabs.
+A Chrome extension that lets you highlight any text on any webpage and instantly get an AI-powered explanation via a floating tooltip - no more copy and pasting or switching tabs.
 
 ![PocketSelectAI Demo](https://img.shields.io/badge/status-live-brightgreen) ![Manifest V3](https://img.shields.io/badge/manifest-v3-blue) ![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688) ![GPT-4o](https://img.shields.io/badge/model-GPT--4o-412991)
 
