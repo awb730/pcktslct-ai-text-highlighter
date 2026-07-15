@@ -219,11 +219,5 @@ Reload the extension in `chrome://extensions`.
 
 ## Author
 
-Built by Al (Allen Baez) — CS student at Montclair State University  
+Allen Baez - CS student at Montclair State University  
 [GitHub](https://github.com/all3n) · [LinkedIn](https://linkedin.com/in/YOUR_HANDLE)
-
----
-
-## License
-
-MIT — do whatever you want with it, just don't hardcode your API key.
