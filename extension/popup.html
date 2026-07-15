@@ -13,8 +13,8 @@
 
     body {
       width: 260px;
-      background: #1a1a2e;
-      color: #e0e0ff;
+      background: #0f1a02;
+      color: #e8f5c8;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       padding: 16px;
     }
@@ -30,15 +30,15 @@
       display: block;
       font-size: 12px;
       font-weight: 500;
-      color: #a0a0cc;
+      color: #80b81a;
       margin-bottom: 6px;
     }
 
     select {
       width: 100%;
-      background: #2d2d5e;
-      color: #e0e0ff;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #1a2e05;
+      color: #e8f5c8;
+      border: 1px solid #4a6e10;
       border-radius: 8px;
       padding: 8px 10px;
       font-size: 13px;
@@ -52,17 +52,17 @@
     }
 
     select:hover {
-      border-color: rgba(120, 120, 221, 0.5);
+      border-color: #80b81a;
     }
 
     select:focus {
-      border-color: #7878dd;
+      border-color: #80b81a;
     }
 
     #status {
       margin-top: 10px;
       font-size: 11px;
-      color: #6a6a8a;
+      color: #a8c862;
       opacity: 0;
       transition: opacity 0.3s ease;
     }
@@ -70,6 +70,93 @@
     #status.visible {
       opacity: 1;
     }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #4a6e10;
+      margin: 12px 0;
+  }
+
+  .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: #a8c862;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+  }
+
+  #clear-history {
+      background: none;
+      border: 1px solid #4a6e10;
+      color: #a8c862;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+
+  #clear-history:hover {
+      border-color: #80b81a;
+      color: #e8f5c8;
+  }
+
+  #history-list {
+      max-height: 260px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+  }
+
+  .history-empty {
+      color: #4a6e10;
+      font-size: 12px;
+      text-align: center;
+      padding: 12px 0;
+  }
+
+  .history-item {
+      background: #1a2e05;
+      border: 1px solid #4a6e10;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+  }
+
+  .history-item:hover {
+      border-color: #80b81a;
+  }
+
+  .history-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 10px;
+      color: #a8c862;
+  }
+
+  .history-input {
+      color: #a8c862;
+      font-size: 11px;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
+
+  .history-response {
+      color: #e8f5c8;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+  }
   </style>
 </head>
 <body>
@@ -84,6 +171,17 @@
   </select>
 
   <p id="status">Mode saved automatically</p>
+
+  <div class="divider"></div>
+
+  <div class="history-header">
+      <span>Recent responses</span>
+      <button id="clear-history">Clear</button>
+  </div>
+
+  <div id="history-list">
+      <div class="history-empty">No history yet.</div>
+  </div>
 
   <script src="popup.js"></script>
 </body>

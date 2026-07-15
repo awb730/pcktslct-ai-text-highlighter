@@ -160,8 +160,116 @@ function positionTooltipNearImage(imgRect) {
     tooltip.style.left = `${imgRect.left + window.scrollX}px`;
 }
 
+// Captures the current visible frame of a video element by drawing
+// it onto a canvas. This must happen in the content script (not the
+// service worker) because video elements live in the page DOM and
+// can be drawn to canvas directly without any network request or CORS issue.
+function videoFrameToBase64(videoElement) {
+    // readyState 2 = HAVE_CURRENT_DATA — means at least one frame is available.
+    // Anything below that means the video hasn't loaded enough to capture.
+    if (videoElement.readyState < 2) {
+        throw new Error("Video not ready — try pausing it first so a frame loads.");
+    }
+
+    // Prefer the actual video resolution over the display size.
+    // videoWidth/videoHeight = the source resolution of the video stream.
+    // clientWidth/clientHeight = how big it appears on screen (may be scaled).
+    // We want source resolution so GPT-4o gets the highest quality frame.
+    const width = videoElement.videoWidth || videoElement.clientWidth;
+    const height = videoElement.videoHeight || videoElement.clientHeight;
+
+    if (!width || !height) {
+        throw new Error("Could not determine video dimensions.");
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext("2d");
+
+    // drawImage on a video element captures the current visible frame instantly.
+    // This is synchronous — no need for a Promise here.
+    ctx.drawImage(videoElement, 0, 0, width, height);
+
+    // toDataURL returns "data:image/png;base64,xxxxx"
+    // We use indexOf + substring (not split) to strip the prefix reliably —
+    // same pattern used in blobToBase64 in background.js.
+    const dataUrl = canvas.toDataURL("image/png");
+    return dataUrl.substring(dataUrl.indexOf(",") + 1);
+}
+
 document.addEventListener("click", (event) => {
-    if (event.target.tagName !== "IMG") return;
+    // Check for video first — use closest() to catch clicks on overlays
+    // that sit on top of the video element (common in custom players).
+    const videoElement = event.target.closest("video");
+    const isImage = event.target.tagName === "IMG";
+
+    // If neither, bail out early
+    if (!videoElement && !isImage) return;
+    if (isOurElement(event.target)) return;
+
+    // --- VIDEO BRANCH ---
+    if (videoElement) {
+        // Prevent the video player's own click handler from firing (play/pause).
+        // Without this, clicking sends the frame to AI AND toggles playback.
+        event.preventDefault();
+        event.stopPropagation();
+
+        const videoRect = videoElement.getBoundingClientRect();
+
+        removeTooltip();
+        removeButton();
+        showTooltip("loading");
+        positionTooltipNearImage(videoRect);
+
+        // Flash a green border so the user knows which video was captured
+        const originalBorder = videoElement.style.border;
+        videoElement.style.border = "3px solid #80b81a";
+        setTimeout(() => {
+            videoElement.style.border = originalBorder;
+        }, 1200);
+
+        if (!chrome.runtime?.id) {
+            showTooltip("error", "Extension was reloaded. Please refresh this page.");
+            positionTooltipNearImage(videoRect);
+            return;
+        }
+
+        try {
+            // Convert frame to base64 HERE in the content script.
+            // We can't pass a DOM element across the message boundary to
+            // background.js — so we extract the base64 now and send the data.
+            const base64 = videoFrameToBase64(videoElement);
+
+            chrome.runtime.sendMessage(
+                // Reuse ASK_AI_IMAGE — background.js already handles base64
+                // but its current callImageBackend expects imageSrc not base64.
+                // So we use a new type VIDEO_FRAME to keep the two paths clean.
+                { type: "ASK_VIDEO_FRAME", base64 },
+                (response) => {
+                    if (chrome.runtime.lastError) {
+                        showTooltip("error", "Extension error. Try reloading the page.");
+                        positionTooltipNearImage(videoRect);
+                        return;
+                    }
+                    if (response.error) {
+                        showTooltip("error", response.error);
+                    } else {
+                        showTooltip("result", response.result);
+                    }
+                    positionTooltipNearImage(videoRect);
+                }
+            );
+        } catch (err) {
+            showTooltip("error", err.message || "Could not capture video frame.");
+            positionTooltipNearImage(videoRect);
+        }
+
+        return; // Don't fall through to image logic
+    }
+
+    // --- IMAGE BRANCH (unchanged) ---
     if (isOurElement(event.target)) return;
 
     const imageSrc = event.target.src;
@@ -238,8 +346,8 @@ function activateSnipMode() {
         snipSelection = document.createElement("div");
         snipSelection.id = "selectai-snip-selection";
         snipSelection.style.position = "fixed";
-        snipSelection.style.border = "2px solid #7878dd";
-        snipSelection.style.background = "rgba(120,120,221,0.15)";
+        snipSelection.style.border = "2px solid #80b81a";
+        snipSelection.style.background = "rgba(128,184,26,0.15)";
         snipSelection.style.pointerEvents = "none";
         snipSelection.style.zIndex = "2147483646";
         document.body.appendChild(snipSelection);

@@ -1,6 +1,6 @@
 from PIL import Image
 
-source = Image.open("pocket-select-logo.png")
+source = Image.open("select-ai-icon.png")
 
 sizes = [16, 48, 128]
 for size in sizes:

@@ -4,8 +4,8 @@
 #selectai-button {
   position: absolute;
   z-index: 2147483647; /* max z-index — stay above everything */
-  background: #1a1a2e;
-  color: #e0e0ff;
+  background: #80b81a;
+  color: #0f1a02;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -13,21 +13,21 @@
   border-radius: 20px;
   cursor: pointer;
   user-select: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(128,184,26,0.3);
   transition: transform 0.1s ease, opacity 0.15s ease;
   white-space: nowrap;
 }
 
 #selectai-button:hover {
   transform: translateY(-1px);
-  background: #2d2d5e;
+  background: #5a8212;
 }
 
 #selectai-tooltip {
   position: absolute;
   z-index: 2147483646;
-  background: #1a1a2e;
-  color: #e0e0ff;
+  background: #0f1a02;
+  color: #e8f5c8;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 14px;
   line-height: 1.6;
@@ -35,8 +35,8 @@
   border-radius: 12px;
   max-width: 360px;
   min-width: 200px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  border: 1px solid #4a6e10
 }
 
 .selectai-close {
@@ -45,14 +45,14 @@
   right: 10px;
   background: none;
   border: none;
-  color: #888;
+  color: #a8c862;
   font-size: 12px;
   cursor: pointer;
   padding: 2px 4px;
   line-height: 1;
 }
 
-.selectai-close:hover { color: #ccc; }
+.selectai-close:hover { color: #e8f5c8; }
 
 .selectai-text {
   margin-top: 4px;
@@ -75,7 +75,7 @@
 .selectai-loading span {
   width: 7px;
   height: 7px;
-  background: #7878dd;
+  background: #80b81a;
   border-radius: 50%;
   animation: selectai-bounce 1s ease-in-out infinite;
 }

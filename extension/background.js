@@ -13,6 +13,16 @@ async function getSavedMode() {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === "ASK_VIDEO_FRAME") {
+        // base64 was already extracted in content.js — just POST it directly.
+        // No fetching or conversion needed here.
+        getSavedMode()
+            .then((mode) => callImageBackendWithBase64(message.base64, mode))
+            .then((result) => sendResponse({ result }))
+            .catch((err) => sendResponse({ error: err.message }));
+        return true;
+    }
+
     if (message.type === "CAPTURE_REGION") {
         getSavedMode()
             .then((mode) => captureRegionBackend(message.rect, message.dpr, sender.tab?.windowId, mode))
@@ -41,6 +51,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true; // <-- critical: keeps the message channel open
 });
 
+// Saves a response to local history (max 20 entries, newest first).
+// Uses chrome.storage.local — stays on device, never sent anywhere.
+async function saveToHistory(input, response, mode) {
+    const result = await chrome.storage.local.get("pocketselect_history");
+    const history = result.pocketselect_history || [];
+
+    // Prepend the new entry
+    history.unshift({
+        input: input.length > 120 ? input.substring(0, 120) + "..." : input,
+        response,
+        mode,
+        timestamp: Date.now()
+    });
+
+    // Keep only the last 20
+    if (history.length > 20) history.splice(20);
+
+    await chrome.storage.local.set({ pocketselect_history: history });
+}
+
 async function callBackend(text, mode = DEFAULT_MODE) {
     const res = await fetch(BACKEND_URL, {
         method: "POST",
@@ -54,6 +84,7 @@ async function callBackend(text, mode = DEFAULT_MODE) {
     }
 
     const data = await res.json();
+    await saveToHistory(text, data.response, mode);
     return data.response;
 }
 
@@ -68,6 +99,25 @@ function blobToBase64(blob) {
         reader.onerror = () => reject(new Error("Failed to read image"));
         reader.readAsDataURL(blob);
     });
+}
+
+// Separate from callImageBackend because that function fetches a URL first.
+// This one receives already-converted base64 from the content script.
+async function callImageBackendWithBase64(base64, mode = DEFAULT_MODE) {
+    const apiRes = await fetch(IMAGE_BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image_data: base64, mode }),
+    });
+
+    if (!apiRes.ok) {
+        const data = await apiRes.json().catch(() => ({}));
+        throw new Error(data.detail || `Server error: ${apiRes.status}`);
+    }
+
+    const data = await apiRes.json();
+    await saveToHistory("[Image]", data.response, mode);
+    return data.response;
 }
 
 async function callImageBackend(imageSrc, mode = DEFAULT_MODE) {
@@ -91,8 +141,11 @@ async function callImageBackend(imageSrc, mode = DEFAULT_MODE) {
     }
 
     const data = await apiRes.json();
+    await saveToHistory("[Video Frame]", data.response, mode);
     return data.response;
 }
+
+
 
 const DEFAULT_SCREENSHOT_WIDTH = 1920;
 const DEFAULT_SCREENSHOT_HEIGHT = 1080;
@@ -154,6 +207,7 @@ async function captureRegionBackend(rect, dpr, windowId, mode = DEFAULT_MODE) {
     }
 
     const data = await apiRes.json();
+    await saveToHistory("[Screen Region]", data.response, mode);
     return data.response;
 }
 
