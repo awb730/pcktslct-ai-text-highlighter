@@ -54,7 +54,7 @@ PocketSelectAI/
     └── .env                    # Local env vars (never committed)
 ```
 
-### How the pieces connect
+<!-- ### How the pieces connect
 
 ```
 User interaction (content.js)
@@ -78,7 +78,7 @@ Tooltip UI rendered on page (content.js)
         │  chrome.storage.local
         ▼
 History panel (popup.js)
-```
+``` -->
 
 ### Why a backend instead of calling OpenAI directly?
 
@@ -98,10 +98,10 @@ Chrome closes the message channel immediately after the listener returns unless 
 
 | Layer | Technology |
 |---|---|
-| Extension | Chrome MV3 · Vanilla JS · CSS |
+| Extension | Chrome MV3 · JavaScript · CSS |
 | Background | Chrome Service Worker |
-| AI Vision | Canvas API → base64 → GPT-4o Vision |
-| Screen capture | `chrome.tabs.captureVisibleTab` + `OffscreenCanvas` |
+| AI Snippet Tool | Canvas API → base64 → GPT-4o Vision |
+| Screen Capture | `chrome.tabs.captureVisibleTab` + `OffscreenCanvas` |
 | Backend | Python · FastAPI · OpenAI SDK |
 | AI Model | GPT-4o (text + vision) |
 | Storage | `chrome.storage.sync` (mode) · `chrome.storage.local` (history) |
@@ -109,7 +109,7 @@ Chrome closes the message channel immediately after the listener returns unless 
 
 ---
 
-## Local development
+<!-- ## Local development until published on Chrome Web Store
 
 ### 1. Clone the repo
 
@@ -190,40 +190,33 @@ And in `extension/manifest.json` update `host_permissions`:
 
 Reload the extension in `chrome://extensions`.
 
----
+--- -->
 
-## Key concepts
+## Important Concepts for Building an Extension
 
-**Manifest V3** — the current Chrome extension standard. Persistent background pages are replaced by service workers that wake up on demand, and cross-origin fetch moves entirely to the service worker context.
+**Manifest V3** - the current Chrome extension standard. Persistent background pages are replaced by service workers that wake up on demand, and CORS fetch moves entirely to the service worker context.
 
-**Message passing** — content scripts and service workers live in isolated JS environments and communicate via `chrome.runtime.sendMessage` / `onMessage`. The content script handles all DOM interaction; the service worker handles all network requests.
+**Message passing** - content scripts and service workers live in JavaScript environments and communicate via `chrome.runtime.sendMessage` or `onMessage`. The content script handles all DOM interaction; the service worker handles all network requests.
 
-**Canvas frame capture** — both image analysis and video frame capture work by drawing the source element onto an HTML5 canvas and calling `toDataURL("image/png")`. The resulting base64 string is sent to GPT-4o Vision with no additional processing needed.
+**Canvas frame capture** - both image analysis and video frame capture work by drawing the source element onto an HTML5 canvas and calling `toDataURL("image/png")`. The resulting base64 string is sent to GPT-4o Vision with no additional processing needed.
 
-**Screen region snipping** — `chrome.tabs.captureVisibleTab()` takes a full screenshot of the current tab as a base64 PNG. An `OffscreenCanvas` in the service worker crops it to the user's drag rectangle (scaled by `devicePixelRatio` for retina displays) before sending to the backend.
+**Screen region snipping** - `chrome.tabs.captureVisibleTab()` takes a full screenshot of the current tab as a base64 PNG. An `OffscreenCanvas` in the service worker crops it to the user's liking before sending to the backend.
 
-**Content script isolation** — `content.js` shares the DOM with the webpage but runs in a sandboxed JS context. Page scripts cannot access extension variables and vice versa.
+**Content script isolation** - `content.js` shares the DOM with the webpage but runs in a sandboxed JavaScript context. Page scripts cannot access extension variables and vice versa.
 
 ---
 
 ## Potential extensions
 
-- [ ] Streaming responses rendered token by token
+- [ ] Streaming responses rendered character by character
 - [ ] Right-click context menu as an alternative trigger
-- [ ] Export history to a text file
+- [ ] Export history to a new response
 - [ ] Custom system prompt editor in the popup
-- [ ] Support for additional languages in translate mode
 - [ ] Chrome Web Store publication
 
 ---
 
 ## Author
 
-Built by Al (Allen Baez) — CS student at Montclair State University  
-[GitHub](https://github.com/all3n) · [LinkedIn](https://linkedin.com/in/YOUR_HANDLE)
-
----
-
-## License
-
-MIT — do whatever you want with it, just don't hardcode your API key.
+Allen Baez - CS student at Montclair State University  
+[LinkedIn](https://linkedin.com/in/albaez2005)
