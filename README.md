@@ -220,4 +220,4 @@ Reload the extension in `chrome://extensions`.
 ## Author
 
 Allen Baez - CS student at Montclair State University  
-[GitHub](https://github.com/all3n) · [LinkedIn](https://linkedin.com/in/YOUR_HANDLE)
+[LinkedIn](https://linkedin.com/in/albaez2005)
