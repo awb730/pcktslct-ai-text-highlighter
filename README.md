@@ -1,9 +1,9 @@
 # PocketSelectAI ✦
 
-A Chrome extension that brings AI analysis to anything on your screen — highlighted text, images, video frames, or any region you drag to select. Powered by GPT-4o and a secure FastAPI backend.
-A Chrome extension that lets you highlight any text on any webpage and instantly get an AI-powered explanation via a floating tooltip - no more copy and pasting or switching tabs.
+A Chrome extension that brings AI analysis to anything on your screen. Such as highlighted text, images, video frames, or any region you drag to select. Powered by GPT-4o Vision and a secure FastAPI backend.
 
-![Status](https://img.shields.io/badge/status-live-brightgreen) ![Manifest V3](https://img.shields.io/badge/manifest-v3-blue) ![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688) ![GPT-4o](https://img.shields.io/badge/model-GPT--4o-412991) ![License](https://img.shields.io/badge/license-MIT-yellow)
+
+![Status](https://img.shields.io/badge/status-live-brightgreen) ![Manifest V3](https://img.shields.io/badge/manifest-v3-blue) ![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688) ![GPT-4o](https://img.shields.io/badge/model-GPT--4o-412991)
 
 ---
 
@@ -17,22 +17,22 @@ A Chrome extension that lets you highlight any text on any webpage and instantly
 | **Screen region** | Press `Alt+S`, drag a rectangle | Any part of the screen sent to GPT-4o Vision |
 
 Switch between four response modes from the popup panel:
-- **Explain** — clear, concise explanation in 2–4 sentences
-- **Summarize** — key points in bullet form
-- **Translate** — converts content to English
-- **Simplify** — plain language explanation for any audience
+- **Explain** - clear, concise explanation in 2-4 sentences
+- **Summarize** - key points in bullet form
+- **Translate** - converts content to English
+- **Simplify** - plain language explanation for any audience
 
-All responses are saved to a local history panel in the popup — no data leaves your browser except to your own backend.
+All responses are saved to a local history panel within the popup menu and no data leaves your browser except to your own backend.
 
 ---
 
 ## Demo
 
-> Highlight a paragraph → click **✦ Ask AI** → GPT-4o explanation appears inline
+> Highlight a paragraph -> click **✦ Ask Pocket** -> GPT-4o explanation appears inline
 
-> Press `Alt+S` → drag over a chart, diagram, or any screen region → instant AI analysis
+> Press `Alt+S` -> drag over a chart, diagram, or anything on the screen -> instant AI analysis
 
-> Click a playing video → green border flashes → GPT-4o describes the current frame
+> Click a playing video → green border flashes → GPT-4o describes the current frame of the video
 
 ---
 
@@ -40,16 +40,16 @@ All responses are saved to a local history panel in the popup — no data leaves
 
 ```
 PocketSelectAI/
-├── extension/                  # Chrome MV3 extension
+├── extension/                  # Chrome extension
 │   ├── manifest.json           # Permissions, shortcuts, content script config
-│   ├── content.js              # Injected into every page — handles all UI and triggers
-│   ├── background.js           # Service worker — API calls, history, screenshot capture
+│   ├── content.js              # Injected into every page - handles all UI and triggers
+│   ├── background.js           # Service worker - API calls, history, screenshot capture
 │   ├── tooltip.css             # Floating UI styles injected into every page
-│   ├── popup.html              # Toolbar popup — mode selector + history panel
-│   ├── popup.js                # Popup logic — reads/writes chrome.storage
-│   └── icons/                  # 16x16, 48x48, 128x128 PNGs
+│   ├── popup.html              # Toolbar popup - mode selector + history panel
+│   ├── popup.js                # Popup logic - reads/writes chrome.storage
+│   └── icons/                  # 16x16, 48x48, 128x128 PNGs (Logos)
 └── backend/
-    ├── main.py                 # FastAPI app — /ask and /ask-image endpoints
+    ├── main.py                 # FastAPI app - /ask and /ask-image endpoints
     ├── requirements.txt        # Python dependencies
     └── .env                    # Local env vars (never committed)
 ```
