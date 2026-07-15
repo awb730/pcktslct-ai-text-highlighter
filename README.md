@@ -1,6 +1,7 @@
 # PocketSelectAI ✦
 
 A Chrome extension that brings AI analysis to anything on your screen — highlighted text, images, video frames, or any region you drag to select. Powered by GPT-4o and a secure FastAPI backend.
+A Chrome extension that lets you highlight any text on any webpage and instantly get an AI-powered explanation via a floating tooltip - no more copy and pasting or switching tabs.
 
 ![Status](https://img.shields.io/badge/status-live-brightgreen) ![Manifest V3](https://img.shields.io/badge/manifest-v3-blue) ![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688) ![GPT-4o](https://img.shields.io/badge/model-GPT--4o-412991) ![License](https://img.shields.io/badge/license-MIT-yellow)
 
