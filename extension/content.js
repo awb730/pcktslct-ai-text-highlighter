@@ -24,7 +24,7 @@ document.addEventListener("mouseup", (event) => {
     showButton(rect);
 });
 
-    // If the user clicks somewhere with no selection, clean everything up
+// If the user clicks somewhere with no selection, clean everything up
 document.addEventListener("mousedown", (event) => {
     if (!isOurElement(event.target)) {
         removeButton();
@@ -133,11 +133,17 @@ function showTooltip(state, text = "") {
 
 // --- Helper Functions ---
 function removeButton() {
-    if (button) { button.remove(); button = null; }
+    if (button) { 
+        button.remove();
+        button = null; 
+    }
 }
 
 function removeTooltip() {
-    if (tooltip) { tooltip.remove(); tooltip = null; }
+    if (tooltip) { 
+        tooltip.remove(); 
+        tooltip = null; 
+    }
 }
 
 // Prevent clicks on our UI from triggering the mousedown cleanup
