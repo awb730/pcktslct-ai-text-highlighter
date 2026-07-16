@@ -82,15 +82,11 @@ History panel (popup.js)
 
 ### Why a backend instead of calling OpenAI directly?
 
-Calling the OpenAI API directly from a Chrome extension exposes your API key in the extension bundle — anyone who installs it can extract it. The FastAPI backend keeps the key in a server-side environment variable. The extension only ever talks to your own endpoint.
+Calling the OpenAI API directly from a Chrome extension exposes your API key in the extension bundle and anyone who installs it can extract it. The FastAPI backend keeps the key in a server-side environment variable. The extension only ever talks to your own endpoint.
 
-### Why convert images/video to base64 in `content.js` not `background.js`?
+### Why convert images and video to base64 in `content.js` not `background.js`?
 
 Content scripts run inside the actual browser tab, which means images already rendered on the page can be drawn to a canvas without triggering CORS restrictions. The service worker makes fresh network requests that third-party CDNs often block. Drawing to canvas in the content script and passing raw base64 to the service worker sidesteps this entirely.
-
-### Why `return true` in the `onMessage` listener?
-
-Chrome closes the message channel immediately after the listener returns unless you return `true`. Since all our backend calls are async (fetch), we must return `true` to keep the channel open until `sendResponse` is called.
 
 ---
 
